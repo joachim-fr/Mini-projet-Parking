@@ -23,6 +23,7 @@ class Etage:
 
     def __str__(self) -> str:
         """Affichage personnalisé de la classe"""
+        self.numero = str(self.numero)
         return self.numero
 
     def get_statistiques(self) -> dict:
