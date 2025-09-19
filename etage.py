@@ -23,6 +23,8 @@ class Etage:
 
     def __str__(self) -> str:
         """Affichage personnalisé de la classe"""
-        return self.numero_etage
+        return self.numero
 
-    
+    def get_statistiques(self) -> dict:
+        """Assesseur personnalisé de la classe retournant les différentes statistiques de l'etage"""
+        return {"parking": self.parking, "numero": self.numero, "places": self.places}
