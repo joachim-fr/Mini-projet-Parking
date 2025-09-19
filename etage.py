@@ -20,3 +20,9 @@ class Etage:
         self.parking = parking
         self.numero = numero_etage
         self.places = places
+
+    def __str__(self) -> str:
+        """Affichage personnalisé de la classe"""
+        return self.numero_etage
+
+    
