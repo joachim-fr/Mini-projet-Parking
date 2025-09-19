@@ -14,4 +14,12 @@ class Place:
         self.numero = numero
         self.occupation = False
         self.voiture_occupant = None
-        self.detenteur_par_abonnement = None
+        self.proprietaire_de_la_place = None
+
+    def __str__(self) -> str:
+        """Affichage personnalisé de la classe"""
+        return str(self.numero)
+    
+    def get_statistiques(self) -> dict:
+        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking"""
+        return {"parking": self.parking, "numero": self.numero, "etage": self.etage, "occupation": self.occupation, "voiture_occupant": self.voiture_occupant, "propriétaire_de_la_classe": self.proprietaire_de_la_place}
