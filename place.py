@@ -20,6 +20,27 @@ class Place:
         """Affichage personnalisé de la classe"""
         return str(self.numero)
     
-    def get_statistiques(self) -> dict:
-        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking"""
-        return {"parking": self.parking, "numero": self.numero, "etage": self.etage, "occupation": self.occupation, "voiture_occupant": self.voiture_occupant, "propriétaire_de_la_classe": self.proprietaire_de_la_place}
+    def get_statistiques(self, statistique: str | None = None) -> dict | int | bool | str | None:
+        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking.
+        Si 'statistique' est précisé, retourne uniquement la valeur correspondante.
+        Sinon, retourne un dictionnaire avec toutes les statistiques.
+        """
+        stats = {
+            "parking": self.parking,
+            "numero": self.numero,
+            "etage": self.etage,
+            "occupation": self.occupation,
+            "voiture_occupant": self.voiture_occupant,
+            "proprietaire_de_la_place": self.proprietaire_de_la_place
+        }
+        if statistique is not None and statistique in stats:
+            return stats[statistique]
+        return stats
+
+    def attribuer_voiture(self, voiture) -> None:
+        """Attribue une voiture a une place"""
+        if self.occupation:
+            print("La place est déjà occupée.")
+        else:
+            self.occupation = True
+            self.voiture_occupant = voiture

@@ -15,7 +15,10 @@ class Etage:
         places = []
 
         for place in range(nombre_place):
-            places.append(Place(parking, self, int(str(numero_etage) + str(place))))
+            numero_place = int(str(numero_etage) + str(place))
+            if place < 100:
+                numero_place = int(str(numero_etage) + "0" + str(place))
+            places.append(Place(parking, self, numero_place))
 
         self.parking = parking
         self.numero = numero_etage
@@ -25,6 +28,16 @@ class Etage:
         """Affichage personnalisé de la classe"""
         return str(self.numero)
 
-    def get_statistiques(self) -> dict:
-        """Assesseur personnalisé de la classe retournant les différentes statistiques de l'etage"""
-        return {"parking": self.parking, "numero": self.numero, "places": self.places}
+    def get_statistiques(self, statistique: str | None = None) -> dict | int | list | str | None:
+        """Assesseur personnalisé de la classe retournant les différentes statistiques de l'étage.
+        Si 'statistique' est précisé, retourne uniquement la valeur correspondante.
+        Sinon, retourne un dictionnaire avec toutes les statistiques.
+        """
+        stats = {
+            "parking": self.parking,
+            "numero": self.numero,
+            "places": self.places
+        }
+        if statistique is not None and statistique in stats:
+            return stats[statistique]
+        return stats

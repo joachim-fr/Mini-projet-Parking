@@ -1,4 +1,6 @@
 from etage import *
+from voiture import *
+from proprietaire import *
 
 class Parking:
     """
@@ -10,7 +12,7 @@ class Parking:
         - abonnes : dictionnaire indiquant les places déjà prisent par des abonnés
     """
 
-    def __init__(self, nom:str, repartition_place:dict, abonnes:dict={}) -> None:
+    def __init__(self, nom: str, repartition_place: dict, voitures: list=[], abonnes: dict={}) -> None:
 
         place_totale = 0
         etages = []
@@ -27,10 +29,16 @@ class Parking:
 
         self.nom = nom
         self.etages = etages
+        self.places = self.__places_parking()
+        self.voitures = []
         self.place_totale = place_totale
         self.places_libres = place_totale
         self.places_occupees = 0
-        self.places_reservees = 0
+        self.places_reservees = []
+
+        # --- Ajout des voitures à l'initialisation
+
+        self.__ajouter_voitures__init(voitures)
 
     def __str__(self) -> str:
         """Affichage personnalisé de la classe"""
@@ -87,15 +95,87 @@ class Parking:
 
         return repartition_place_corrigee
 
-    def get_statistiques(self) -> dict:
-        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking"""
-        return {"nom": self.nom, "etages": self.etages, "place_totale": self.place_totale, "places_libres": self.places_libres, "places_occupees": self.places_occupees, "places_reservees": self.places_reservees}
-    
-    def ajouter_voitures(self, voitures: dict) -> None:
-        """"""
+    def __ajouter_voitures__init(self, voitures: list) -> None:
+        """Ajoute des voitures dans des places de parking du parking"""
+        for voiture in voitures:
+            place = self.trouver_place(voiture["place"])
+            if place:
+                objet_voiture = Voiture(self, place, voiture["immatriculation"], voiture["marque"])
+                self.voitures.append(objet_voiture)
+                place.attribuer_voiture(objet_voiture)
+                objet_voiture.ajouter_proprietaire(Proprietaire(voiture["nom_proprietaire"], objet_voiture))
 
-repartition = {0:23, 1:56, 5:26}
+    def __places_parking(self) -> list:
+        """Assesseur renvoyant la liste de l'entièreté des places d'un parking"""
+        places = []
 
-test = Parking("Michel", repartition)
+        for etage in self.etages:
+            for place in etage.get_statistiques("places"):
+                places.append(place)
+
+        return places
+
+    def get_statistiques(self, statistique: str | None = None) -> dict | str | int | list | None:
+        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking.
+        Si 'statistique' est précisé, retourne uniquement la valeur correspondante.
+        Sinon, retourne un dictionnaire avec toutes les statistiques.
+        """
+        stats = {
+            "nom": self.nom,
+            "etages": self.etages,
+            "places": self.places,
+            "place_totale": self.place_totale,
+            "places_libres": self.places_libres,
+            "places_occupees": self.places_occupees,
+            "places_reservees": self.places_reservees
+        }
+        if statistique is not None and statistique in stats:
+            return stats[statistique]
+        return stats
+
+    def trouver_place(self, numero_place: int) -> Place | bool:
+        """Trouve une place dans le parking avec son numéro, si la place n'existe pas la méthode renvoie False"""
+        for place in self.places:
+            if numero_place == place.get_statistiques("numero"):
+                return place
+        return False
+
+    def trouver_voiture(self, immatriculation: str) -> Voiture | bool:
+        """Trouve une voiture dans le parking avec son immatriculation, si la voiture n'existe pas la méthode renvoie False"""
+        for voiture in self.voitures:
+            if immatriculation == voiture.get_statistiques("immatriculation"):
+                return voiture
+        return False
+
+    def garer_voiture(self, voiture: dict, place: int | Voiture):
+        """Mutateur garant une voiture a une place si elle existe et si elle n'est pas occupée"""
+        if type(place) != Voiture:
+            place = trouver_place(numero_place)
+
+        if place:
+            if not place.occupation: # Faire le cas ou 2 meme plaqu ed'immatriculation
+                objet_voiture = Voiture(self, place, voiture["immatriculation"], voiture["marque"])
+                self.voitures.append(objet_voiture)
+                place.attribuer_voiture(objet_voiture)
+                objet_voiture.ajouter_proprietaire(Proprietaire(voiture["nom_proprietaire"], objet_voiture))
+            else:
+                print("La place est déja occupée")
+        else:
+            print("La place n'éxiste pas dans ce parking")
+
+    def retirer_voiture(self, voiture: str | Voiture):
+        """Mutateur retirant une voiture garée dans un parking"""
+        if type(place) != Voiture:
+            voiture = trouver_place(numero_place) 
+
+        if voiture:
+            if voiture in self.voitures: # retirer voitur edu parking changer l'état d'occupation de la place
+                voiture
+
+repartition = {0:23, -1:56, 5:26}
+voitures = [{"immatriculation": "AA-123-AA", "marque": "Volvo", "nom_proprietaire": "Michel", "place": -101}]
+
+test = Parking("Michel", repartition, voitures)
 print(test)
-print(test.get_statistiques()["etages"])
+print(test.get_statistiques("etages")[0].get_statistiques("places")[1].get_statistiques())
+print(test.get_statistiques("etages")[0].get_statistiques("places")[2].get_statistiques())

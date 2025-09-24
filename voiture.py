@@ -4,16 +4,18 @@ class Voiture:
 
     __init__ :
         - parking : parking dans lequel est garée la voiture
+        - place : place ou est garée la voiture
         - immatriculation : immatriculation de la voiture
         - marque : marque de la voiture
         - proprietaire : proprietaire de la voiture
     """
     
-    def __init__(self, parking, immatriculation: str, marque: str, proprietaire=None):
+    def __init__(self, parking, place, immatriculation: str, marque: str, proprietaire=None):
 
         immatriculation_corrigee = self.__correct_user_value(immatriculation)
 
         self.parking = parking
+        self.place = place
         self.immatriculation = immatriculation_corrigee
         self.marque = marque
         self.proprietaire = proprietaire
@@ -44,3 +46,23 @@ class Voiture:
                 return None
             
         return immatriculation
+
+    def get_statistiques(self, statistique: str | None = None) -> dict | str | int | None:
+        """Assesseur personnalisé de la classe retournant les différentes statistiques de la voiture.
+        Si 'statistique' est précisé, retourne uniquement la valeur correspondante.
+        Sinon, retourne un dictionnaire avec toutes les statistiques.
+        """
+        stats = {
+            "parking": self.parking,
+            "place": self.place,
+            "immatriculation": self.immatriculation,
+            "marque": self.marque,
+            "proprietaire": self.proprietaire
+        }
+        if statistique is not None and statistique in stats:
+            return stats[statistique]
+        return stats
+
+    def ajouter_proprietaire(self, proprietaire):
+        """Mutateur de l'attribu proprietaire"""
+        self.proprietaire = proprietaire
