@@ -12,7 +12,7 @@ class Parking:
         - abonnes : dictionnaire indiquant les places déjà prisent par des abonnés
     """
 
-    def __init__(self, nom: str, repartition_place: dict, voitures: list=[], abonnes: dict={}) -> None:
+    def __init__(self, nom: str, repartition_place: dict, voitures: list=[], abonnes: list=[]) -> None:
 
         place_totale = 0
         etages = []
@@ -100,10 +100,30 @@ class Parking:
         for voiture in voitures:
             place = self.trouver_place(voiture["place"])
             if place:
-                objet_voiture = Voiture(self, place, voiture["immatriculation"], voiture["marque"])
-                self.voitures.append(objet_voiture)
-                place.attribuer_voiture(objet_voiture)
-                objet_voiture.ajouter_proprietaire(Proprietaire(voiture["nom_proprietaire"], objet_voiture))
+                if voiture["immatriculation"] not in self.__immatriculations_voitures():   
+                    objet_voiture = Voiture(self, place, voiture["immatriculation"], voiture["marque"])
+                    self.voitures.append(objet_voiture)
+                    place.attribuer_voiture(objet_voiture)
+                    objet_voiture.ajouter_proprietaire(Proprietaire(voiture["nom_proprietaire"], objet_voiture))
+                    self.places_libres -= 1
+                    self.places_occupees += 1
+                else:
+                    print("La voiture ne peut avoir la même immatriculation qu'une autre voiture")
+            else:
+                print("La place n'existe pas dans ce parking")
+
+    def __ajouter_abonnes__init(self, abonnes: list) -> None:
+        """Ajoute des abonnés ayant payé pour ce parking"""
+        for abonne in abonnes:
+            if self.trouver_place(abonne["place"]):
+                if abonne["immatriculation_voiture"] not in self.__immatriculations_voitures():
+                    objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
+                    if objet_voiture.immatriculation == None:
+                        print("La plaque d'immatriculation d'un abonne doit être valide")
+                        return
+                    # FINIR INITIALISATION + MODIFIER GARER POUR VERIFIER PLAQUE ABONE ET NOM DU PROPRIETAIRE
+
+
 
     def __places_parking(self) -> list:
         """Assesseur renvoyant la liste de l'entièreté des places d'un parking"""
@@ -115,11 +135,17 @@ class Parking:
 
         return places
 
+    def __immatriculations_voitures(self) -> list:
+        """Assesseur renvoyant la liste des plaques d'immatriculation des voitures garées danns un parking"""
+        immatriculations = []
+
+        for voiture in self.voitures:
+            immatriculations.append(voiture.get_statistiques("immatriculation"))
+
+        return immatriculations
+
     def get_statistiques(self, statistique: str | None = None) -> dict | str | int | list | None:
-        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking.
-        Si 'statistique' est précisé, retourne uniquement la valeur correspondante.
-        Sinon, retourne un dictionnaire avec toutes les statistiques.
-        """
+        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking, si 'statistique' est précisé, retourne uniquement la valeur correspondante, sinon, retourne un dictionnaire avec toutes les statistiques"""
         stats = {
             "nom": self.nom,
             "etages": self.etages,
@@ -150,32 +176,46 @@ class Parking:
     def garer_voiture(self, voiture: dict, place: int | Voiture):
         """Mutateur garant une voiture a une place si elle existe et si elle n'est pas occupée"""
         if type(place) != Voiture:
-            place = trouver_place(numero_place)
+            place = self.trouver_place(place)
 
         if place:
-            if not place.occupation: # Faire le cas ou 2 meme plaqu ed'immatriculation
-                objet_voiture = Voiture(self, place, voiture["immatriculation"], voiture["marque"])
-                self.voitures.append(objet_voiture)
-                place.attribuer_voiture(objet_voiture)
-                objet_voiture.ajouter_proprietaire(Proprietaire(voiture["nom_proprietaire"], objet_voiture))
+            if not place.occupation:
+                if voiture["immatriculation"] not in self.__immatriculations_voitures():
+                    objet_voiture = Voiture(self, place, voiture["immatriculation"], voiture["marque"])
+                    self.voitures.append(objet_voiture)
+                    place.attribuer_voiture(objet_voiture)
+                    objet_voiture.ajouter_proprietaire(Proprietaire(voiture["nom_proprietaire"], objet_voiture))
+                    self.places_libres -= 1
+                    self.places_occupees += 1
+                else:
+                    print("La voiture ne peut pas avoir la même immatriculation qu'une autre voiture.")
             else:
                 print("La place est déja occupée")
         else:
-            print("La place n'éxiste pas dans ce parking")
+            print("La place n'existe pas dans ce parking")
 
     def retirer_voiture(self, voiture: str | Voiture):
         """Mutateur retirant une voiture garée dans un parking"""
-        if type(place) != Voiture:
-            voiture = trouver_place(numero_place) 
+        if type(voiture) != Voiture:
+            voiture = self.trouver_place(voiture) 
 
         if voiture:
-            if voiture in self.voitures: # retirer voitur edu parking changer l'état d'occupation de la place
-                voiture
+            if voiture in self.voitures:
+                self.voitures.remove(voiture)
+                voiture.get_statistiques("place").occupation = False
+                voiture.get_statistiques("place").voiture_occupant = None
+                voiture.place = None
+                self.places_libres += 1
+                self.places_occupees -= 1
 
 repartition = {0:23, -1:56, 5:26}
 voitures = [{"immatriculation": "AA-123-AA", "marque": "Volvo", "nom_proprietaire": "Michel", "place": -101}]
+abonne = [{"nom_abonne": "Jean", "immatriculation_voiture": "", "place": 105, "marque": "Volvo"}]
 
 test = Parking("Michel", repartition, voitures)
 print(test)
 print(test.get_statistiques("etages")[0].get_statistiques("places")[1].get_statistiques())
 print(test.get_statistiques("etages")[0].get_statistiques("places")[2].get_statistiques())
+
+test.garer_voiture({"immatriculation": "AA-123-BA", "marque": "Volvo", "nom_proprietaire": "Michel", "place": -101}, -102)
+print(test.get_statistiques("etages")[0].get_statistiques("places")[2].get_statistiques("voiture_occupant"))
