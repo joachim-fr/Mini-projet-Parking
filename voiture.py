@@ -9,7 +9,7 @@ class Voiture:
         - proprietaire : proprietaire de la voiture
     """
     
-    def __init__(self, parking, immatriculation: str, marque: str, proprietaire):
+    def __init__(self, parking, immatriculation: str, marque: str, proprietaire=None):
 
         immatriculation_corrigee = self.__correct_user_value(immatriculation)
 

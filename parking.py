@@ -28,8 +28,9 @@ class Parking:
         self.nom = nom
         self.etages = etages
         self.place_totale = place_totale
-        self.place_libre = place_totale
-        self.place_occupee = 0
+        self.places_libres = place_totale
+        self.places_occupees = 0
+        self.places_reservees = 0
 
     def __str__(self) -> str:
         """Affichage personnalisé de la classe"""
@@ -88,7 +89,10 @@ class Parking:
 
     def get_statistiques(self) -> dict:
         """Assesseur personnalisé de la classe retournant les différentes statistiques du parking"""
-        return {"nom": self.nom, "etages": self.etages, "place_totale": self.place_totale, "place_libre": self.place_libre, "place_occupee": self.place_occupee}
+        return {"nom": self.nom, "etages": self.etages, "place_totale": self.place_totale, "places_libres": self.places_libres, "places_occupees": self.places_occupees, "places_reservees": self.places_reservees}
+    
+    def ajouter_voitures(self, voitures: dict) -> None:
+        """"""
 
 repartition = {0:23, 1:56, 5:26}
 
