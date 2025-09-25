@@ -97,7 +97,7 @@ class Parking:
         return repartition_place_corrigee
 
     def __ajouter_voitures__init(self, voitures: list) -> None:
-        """Ajoute des voitures dans des places de parking du parking"""
+        """Ajoute des voitures dans des places libres du parking"""
         for voiture in voitures:
             place = self.trouver_place(voiture["place"])
             if place:
@@ -127,7 +127,7 @@ class Parking:
                     objet_voiture.ajouter_proprietaire(abonne_objet)
                     place.attribuer_proprietaire(abonne_objet)
                     self.places_reservees.append(place)
-                    # FINIR INITIALISATION + MODIFIER GARER POUR VERIFIER PLAQUE ABONE ET NOM DU PROPRIETAIRE
+                    # FINIR INITIALISATION + MODIFIER GARER POUR VERIFIER PLAQUE ABONNE ET NOM DU PROPRIETAIRE
 
     def __abonnes_voitures_parking(self) -> list:
         """Assesseur renvoyant la liste de l'entièreté des voitures d'abonnés"""
@@ -167,27 +167,28 @@ class Parking:
             "places_libres": self.places_libres,
             "places_occupees": self.places_occupees,
             "places_reservees": self.places_reservees
+            "voitures_abonnes": self.voitures_abonnes
         }
         if statistique is not None and statistique in stats:
             return stats[statistique]
         return stats
 
     def trouver_place(self, numero_place: int) -> Place | bool:
-        """Trouve une place dans le parking avec son numéro, si la place n'existe pas la méthode renvoie False"""
+        """Trouve une place dans le parking avec son numéro,renvoie False si la place n'existe pas"""
         for place in self.places:
             if numero_place == place.get_statistiques("numero"):
                 return place
         return False
 
     def trouver_voiture(self, immatriculation: str) -> Voiture | bool:
-        """Trouve une voiture dans le parking avec son immatriculation, si la voiture n'existe pas la méthode renvoie False"""
+        """Trouve une voiture dans le parking avec son immatriculation,renvoie False si la voiture n'existe pas"""
         for voiture in self.voitures:
             if immatriculation == voiture.get_statistiques("immatriculation"):
                 return voiture
         return False
 
     def garer_voiture(self, voiture: dict, place: int | Voiture):
-        """Mutateur garant une voiture a une place si elle existe et si elle n'est pas occupée"""
+        """Mutateur garant une voiture à une place si elle existe et si elle n'est pas occupée"""
         if type(place) != Voiture:
             place = self.trouver_place(place)
 
