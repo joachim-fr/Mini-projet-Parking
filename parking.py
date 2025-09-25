@@ -29,7 +29,7 @@ class Parking:
 
         # --- Ajout des abonnés à l'initialisation
 
-        self.__abonnes_voitures_parking(abonnes)
+        self.__ajouter_abonnes__init(abonnes)
 
         self.nom = nom
         self.etages = etages
@@ -174,7 +174,7 @@ class Parking:
             "place_totale": self.place_totale,
             "places_libres": self.places_libres,
             "places_occupees": self.places_occupees,
-            "places_reservees": self.places_reservees
+            "places_reservees": self.places_reservees,
             "voitures_abonnes": self.voitures_abonnes
         }
         if statistique is not None and statistique in stats:
