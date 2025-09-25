@@ -135,8 +135,10 @@ class Parking:
 
         for place in self.places:
             if place.get_statistiques("proprietaire_de_la_place") != None:
-                voiture_proprietaire = place.get_statistiques("proprietaire_de_la_place")
-                voitures.append()
+                voiture_proprietaire = place.get_statistiques("proprietaire_de_la_place").get_statistiques("voiture")
+                voitures.append(voiture_proprietaire)
+
+        return voitures
 
     def __places_parking(self) -> list:
         """Assesseur renvoyant la liste de l'entièreté des places d'un parking"""
