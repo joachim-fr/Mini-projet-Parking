@@ -122,16 +122,16 @@ class Parking:
         for abonne in abonnes:
             place = self.trouver_place(abonne["place"])
             if place:
-                if abonne["immatriculation_voiture"] not in self.__immatriculations_voitures():
-                    objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
-                    if objet_voiture.immatriculation == None:
-                        print("La plaque d'immatriculation d'un abonne doit être valide")
-                        return
-                    abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
-                    objet_voiture.ajouter_proprietaire(abonne_objet)
-                    place.attribuer_proprietaire(abonne_objet)
-                    self.places_reservees.append(place)
-                    # FINIR INITIALISATION + MODIFIER GARER POUR VERIFIER PLAQUE ABONNE ET NOM DU PROPRIETAIRE
+                objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
+                if objet_voiture.immatriculation == None:
+                    print("La plaque d'immatriculation d'un abonne doit être valide")
+                    return
+                abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
+                objet_voiture.ajouter_proprietaire(abonne_objet)
+                place.attribuer_proprietaire(abonne_objet)
+                self.places_reservees.append(place)  
+            else:
+                print("La place n'existe pas")        
 
     def __abonnes_voitures_parking(self) -> list:
         """Assesseur renvoyant la liste de l'entièreté des voitures d'abonnés"""
