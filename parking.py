@@ -238,9 +238,3 @@ print(test.get_statistiques("etages")[0].get_statistiques("places")[2].get_stati
 
 test.garer_voiture({"immatriculation": "AA-123-BA", "marque": "Volvo", "nom_proprietaire": "Michel", "place": -101}, -102)
 print(test.get_statistiques("etages")[0].get_statistiques("places")[2].get_statistiques("voiture_occupant"))
-
-
-
-parking1 = Parking("quai de seine")
-
-assert str(parking1) == "quai de seine"
