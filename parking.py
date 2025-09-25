@@ -36,6 +36,7 @@ class Parking:
         self.places_libres = place_totale
         self.places_occupees = 0
         self.places_reservees = []
+        self.voitures_abonnes = []
 
         # --- Ajout des voitures à l'initialisation
 
