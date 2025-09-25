@@ -122,14 +122,17 @@ class Parking:
         for abonne in abonnes:
             place = self.trouver_place(abonne["place"])
             if place:
-                objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
-                if objet_voiture.immatriculation == None:
-                    print("La plaque d'immatriculation d'un abonne doit être valide")
-                    return
-                abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
-                objet_voiture.ajouter_proprietaire(abonne_objet)
-                place.attribuer_proprietaire(abonne_objet)
-                self.places_reservees.append(place)  
+                if abonne["immatriculation"] not in self.__abonnes_voitures_parking().get_statistiques("immatriculation"):
+                    objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
+                    if objet_voiture.immatriculation == None:
+                        print("La plaque d'immatriculation d'un abonne doit être valide")
+                        return
+                    abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
+                    objet_voiture.ajouter_proprietaire(abonne_objet)
+                    place.attribuer_proprietaire(abonne_objet)
+                    self.places_reservees.append(place)  
+                else:
+                    print("La voiture est déjà abonnée.")
             else:
                 print("La place n'existe pas")        
 
