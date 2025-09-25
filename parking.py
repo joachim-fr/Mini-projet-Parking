@@ -7,9 +7,10 @@ class Parking:
     Parking
 
     __init__:
-        - nom : nom di parking
+        - nom : nom du parking
         - repartition_place : dictionnaire indiquant comment se fait la répartition des places dans les étages (dictionnaire sous la forme {numero_de_l_etage : numero_de_la_place})
-        - abonnes : dictionnaire indiquant les places déjà prisent par des abonnés
+        - voitures : liste indiquant les voitures déjà garées
+        - abonnes : liste indiquant les places déjà prises par des abonnés
     """
 
     def __init__(self, nom: str, repartition_place: dict, voitures: list=[], abonnes: list=[]) -> None:
@@ -150,6 +151,7 @@ class Parking:
             "nom": self.nom,
             "etages": self.etages,
             "places": self.places,
+            "voitures": self.voitures,
             "place_totale": self.place_totale,
             "places_libres": self.places_libres,
             "places_occupees": self.places_occupees,
