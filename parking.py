@@ -27,6 +27,10 @@ class Parking:
             etages.append(Etage(self, etage, place))
             place_totale += place
 
+        # --- Ajout des abonnés à l'initialisation
+
+        self.__abonnes_voitures_parking(abonnes)
+
         self.nom = nom
         self.etages = etages
         self.places = self.__places_parking()
@@ -35,7 +39,7 @@ class Parking:
         self.places_libres = place_totale
         self.places_occupees = 0
         self.places_reservees = []
-        self.voitures_abonnes = []
+        self.voitures_abonnes = self.__abonnes_voitures_parking()
 
         # --- Ajout des voitures à l'initialisation
 
@@ -133,8 +137,7 @@ class Parking:
         """Assesseur renvoyant la liste de l'entièreté des voitures d'abonnés"""
         voitures = []
 
-        for place in self.places:
-            if place.get_statistiques("proprietaire_de_la_place") != None:
+        for place in self.places_reservees:
                 voiture_proprietaire = place.get_statistiques("proprietaire_de_la_place").get_statistiques("voiture")
                 voitures.append(voiture_proprietaire)
 
