@@ -12,6 +12,8 @@ class Proprietaire:
         self.nom = nom
         self.voiture = voiture
 
+    
+
 class Abonne(Proprietaire):
     """
     Abonné possédant une place

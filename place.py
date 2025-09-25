@@ -44,3 +44,10 @@ class Place:
         else:
             self.occupation = True
             self.voiture_occupant = voiture
+    
+    def attribuer_proprietaire(self, proprietaire) -> None:
+        """Attribue un abonné à une place"""
+        if self.proprietaire_de_la_place == None:
+            self.proprietaire_de_la_place = proprietaire
+        else:
+            print("La place est déjà réservée")

@@ -9,8 +9,7 @@ class Parking:
     __init__:
         - nom : nom du parking
         - repartition_place : dictionnaire indiquant comment se fait la répartition des places dans les étages (dictionnaire sous la forme {numero_de_l_etage : numero_de_la_place})
-        - voitures : liste indiquant les voitures déjà garées
-        - abonnes : liste indiquant les places déjà prises par des abonnés
+        - abonnes : dictionnaire indiquant les places déjà prisent par des abonnés
     """
 
     def __init__(self, nom: str, repartition_place: dict, voitures: list=[], abonnes: list=[]) -> None:
@@ -117,15 +116,27 @@ class Parking:
     def __ajouter_abonnes__init(self, abonnes: list) -> None:
         """Ajoute des abonnés ayant payé pour ce parking"""
         for abonne in abonnes:
-            if self.trouver_place(abonne["place"]):
+            place = self.trouver_place(abonne["place"])
+            if place:
                 if abonne["immatriculation_voiture"] not in self.__immatriculations_voitures():
                     objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
                     if objet_voiture.immatriculation == None:
                         print("La plaque d'immatriculation d'un abonne doit être valide")
                         return
+                    abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
+                    objet_voiture.ajouter_proprietaire(abonne_objet)
+                    place.attribuer_proprietaire(abonne_objet)
+                    self.places_reservees.append(place)
                     # FINIR INITIALISATION + MODIFIER GARER POUR VERIFIER PLAQUE ABONE ET NOM DU PROPRIETAIRE
 
+    def __abonnes_voitures_parking(self) -> list:
+        """Assesseur renvoyant la liste de l'entièreté des voitures d'abonnés"""
+        voitures = []
 
+        for place in self.places:
+            if place.get_statistiques("proprietaire_de_la_place") != None:
+                voiture_proprietaire = place.get_statistiques("proprietaire_de_la_place")
+                voitures.append()
 
     def __places_parking(self) -> list:
         """Assesseur renvoyant la liste de l'entièreté des places d'un parking"""
@@ -152,7 +163,6 @@ class Parking:
             "nom": self.nom,
             "etages": self.etages,
             "places": self.places,
-            "voitures": self.voitures,
             "place_totale": self.place_totale,
             "places_libres": self.places_libres,
             "places_occupees": self.places_occupees,
