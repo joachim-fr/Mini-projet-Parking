@@ -12,6 +12,16 @@ class Proprietaire:
         self.nom = nom
         self.voiture = voiture
 
+    def get_statistiques(self, statistique: str | None = None) -> dict | str | int | list | None:
+        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking, si 'statistique' est précisé, retourne uniquement la valeur correspondante, sinon, retourne un dictionnaire avec toutes les statistiques"""
+        stats = {
+            "nom": self.nom,
+            "voiture": self.voiture
+        }
+        if statistique is not None and statistique in stats:
+            return stats[statistique]
+        return stats
+
     
 
 class Abonne(Proprietaire):
@@ -27,3 +37,14 @@ class Abonne(Proprietaire):
         super().__init__(nom, voiture)
 
         self.place = place
+
+    def get_statistiques(self, statistique: str | None = None) -> dict | str | int | list | None:
+        """Assesseur personnalisé de la classe retournant les différentes statistiques du parking, si 'statistique' est précisé, retourne uniquement la valeur correspondante, sinon, retourne un dictionnaire avec toutes les statistiques"""
+        stats = {
+            "nom": self.nom,
+            "voiture": self.voiture,
+            "place": self.place
+        }
+        if statistique is not None and statistique in stats:
+            return stats[statistique]
+        return stats
