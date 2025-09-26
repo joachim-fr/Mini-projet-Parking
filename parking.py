@@ -206,11 +206,6 @@ class Parking:
         if place:
             if not place.occupation:
                 if voiture["immatriculation"] not in self.__immatriculations_voitures():
-                    # Vérification si l'immatriculation appartient à un abonné
-                    if voiture["immatriculation"] in self.__abonnes_immatriculation_voitures_parking():
-                        print("La voiture appartient à un abonné. Attribution de la place.")
-                    
-                    # Ajout de la voiture
                     objet_voiture = Voiture(self, place, voiture["immatriculation"], voiture["marque"])
                     self.voitures.append(objet_voiture)
                     place.attribuer_voiture(objet_voiture)
