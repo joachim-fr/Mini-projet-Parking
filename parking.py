@@ -29,7 +29,7 @@ class Parking:
 
         # --- Ajout des abonnés à l'initialisation
 
-        self.__ajouter_abonnes__init(abonnes)
+
 
         self.nom = nom
         self.etages = etages
@@ -39,11 +39,13 @@ class Parking:
         self.places_libres = place_totale
         self.places_occupees = 0
         self.places_reservees = []
-        self.voitures_abonnes = self.__abonnes_voitures_parking()
 
         # --- Ajout des voitures à l'initialisation
 
         self.__ajouter_voitures__init(voitures)
+        self.__ajouter_abonnes__init(abonnes)
+
+        self.voitures_abonnes = self.__abonnes_immatriculation_voitures_parking()
 
     def __str__(self) -> str:
         """Affichage personnalisé de la classe"""
@@ -130,7 +132,8 @@ class Parking:
                     abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
                     objet_voiture.ajouter_proprietaire(abonne_objet)
                     place.attribuer_proprietaire(abonne_objet)
-                    self.places_reservees.append(place)  
+                    self.places_reservees.append(place) 
+                    self.places_libres -= 1 
                 else:
                     print("La voiture est déjà abonnée.")
             else:
@@ -224,7 +227,7 @@ class Parking:
     def retirer_voiture(self, voiture: str | Voiture):
         """Mutateur retirant une voiture garée dans un parking"""
         if type(voiture) != Voiture:
-            voiture = self.trouver_place(voiture) 
+            voiture = self.trouver_voiture(voiture)
 
         if voiture:
             if voiture in self.voitures:
