@@ -48,3 +48,48 @@ class Abonne(Proprietaire):
         if statistique is not None and statistique in stats:
             return stats[statistique]
         return stats
+
+if __name__ == "__main__":
+    # Création d'une voiture fictive pour les tests
+    class VoitureFictive:
+        pass
+
+    voiture_test = VoitureFictive()
+
+    # Création d'un propriétaire pour les tests
+    proprietaire_test = Proprietaire("Michel", voiture_test)
+
+    # Assert pour __init__ de Proprietaire
+    assert proprietaire_test.nom == "Michel", "Le nom du propriétaire devrait être 'Michel'."
+    assert proprietaire_test.voiture == voiture_test, "La voiture du propriétaire devrait correspondre à la voiture de test."
+
+    # Assert pour .get_statistiques() de Proprietaire
+    stats = proprietaire_test.get_statistiques()
+    assert stats["nom"] == "Michel", "La statistique 'nom' devrait être 'Michel'."
+    assert stats["voiture"] == voiture_test, "La statistique 'voiture' devrait correspondre à la voiture de test."
+
+    # Test d'une statistique spécifique pour Proprietaire
+    assert proprietaire_test.get_statistiques("nom") == "Michel", "La méthode devrait retourner 'Michel' pour la statistique 'nom'."
+
+    # Création d'un abonné pour les tests
+    class PlaceFictive:
+        pass
+
+    place_test = PlaceFictive()
+    abonne_test = Abonne("Alice", voiture_test, place_test)
+
+    # Assert pour __init__ de Abonne
+    assert abonne_test.nom == "Alice", "Le nom de l'abonné devrait être 'Alice'."
+    assert abonne_test.voiture == voiture_test, "La voiture de l'abonné devrait correspondre à la voiture de test."
+    assert abonne_test.place == place_test, "La place de l'abonné devrait correspondre à la place de test."
+
+    # Assert pour .get_statistiques() de Abonne
+    stats_abonne = abonne_test.get_statistiques()
+    assert stats_abonne["nom"] == "Alice", "La statistique 'nom' devrait être 'Alice'."
+    assert stats_abonne["voiture"] == voiture_test, "La statistique 'voiture' devrait correspondre à la voiture de test."
+    assert stats_abonne["place"] == place_test, "La statistique 'place' devrait correspondre à la place de test."
+
+    # Test d'une statistique spécifique pour Abonne
+    assert abonne_test.get_statistiques("place") == place_test, "La méthode devrait retourner la place de test pour la statistique 'place'."
+
+    print("Tous les tests pour les classes Proprietaire et Abonne sont passés avec succès.")

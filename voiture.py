@@ -66,3 +66,52 @@ class Voiture:
     def ajouter_proprietaire(self, proprietaire):
         """Mutateur de l'attribu proprietaire"""
         self.proprietaire = proprietaire
+
+
+if __name__ == "__main__":
+    # Création d'un parking et d'une place fictifs pour les tests
+    class ParkingFictif:
+        pass
+
+    class PlaceFictive:
+        pass
+
+    parking_test = ParkingFictif()
+    place_test = PlaceFictive()
+
+    # Création d'une voiture pour les tests
+    voiture_test = Voiture(parking_test, place_test, "AA-123-AA", "Volvo")
+
+    # Assert pour __init__
+    assert voiture_test.immatriculation == "AA-123-AA", "L'immatriculation devrait être 'AA-123-AA'."
+    assert voiture_test.marque == "Volvo", "La marque devrait être 'Volvo'."
+    assert voiture_test.parking == parking_test, "Le parking devrait correspondre au parking de test."
+    assert voiture_test.place == place_test, "La place devrait correspondre à la place de test."
+    assert voiture_test.proprietaire is None, "Le propriétaire devrait être None initialement."
+
+    # Assert pour __str__
+    assert str(voiture_test) == "AA-123-AA", "La représentation de la voiture devrait être 'AA-123-AA'."
+
+    # Assert pour .get_statistiques()
+    stats = voiture_test.get_statistiques()
+    assert stats["immatriculation"] == "AA-123-AA", "La statistique 'immatriculation' devrait être 'AA-123-AA'."
+    assert stats["marque"] == "Volvo", "La statistique 'marque' devrait être 'Volvo'."
+    assert stats["parking"] == parking_test, "La statistique 'parking' devrait correspondre au parking de test."
+    assert stats["place"] == place_test, "La statistique 'place' devrait correspondre à la place de test."
+
+    # Test d'une statistique spécifique
+    assert voiture_test.get_statistiques("marque") == "Volvo", "La méthode devrait retourner 'Volvo' pour la statistique 'marque'."
+
+    # Assert pour ajouter_proprietaire()
+    class ProprietaireFictif:
+        pass
+
+    proprietaire_test = ProprietaireFictif()
+    voiture_test.ajouter_proprietaire(proprietaire_test)
+    assert voiture_test.proprietaire == proprietaire_test, "Le propriétaire devrait correspondre au propriétaire de test."
+
+    # Assert pour __correct_user_value()
+    voiture_invalide = Voiture(parking_test, place_test, "INVALID", "Tesla")
+    assert voiture_invalide.immatriculation is None, "L'immatriculation invalide devrait être None."
+
+    print("Tous les tests pour la classe Voiture sont passés avec succès.")

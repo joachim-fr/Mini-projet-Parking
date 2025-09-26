@@ -122,7 +122,7 @@ class Parking:
         for abonne in abonnes:
             place = self.trouver_place(abonne["place"])
             if place:
-                if abonne["immatriculation"] not in self.__abonnes_voitures_parking().get_statistiques("immatriculation"):
+                if abonne["immatriculation"] not in self.__abonnes_immatriculation_voitures_parking():
                     objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
                     if objet_voiture.immatriculation == None:
                         print("La plaque d'immatriculation d'un abonne doit être valide")
@@ -136,12 +136,12 @@ class Parking:
             else:
                 print("La place n'existe pas")        
 
-    def __abonnes_voitures_parking(self) -> list:
+    def __abonnes_immatriculation_voitures_parking(self) -> list:
         """Assesseur renvoyant la liste de l'entièreté des voitures d'abonnés"""
         voitures = []
 
         for place in self.places_reservees:
-                voiture_proprietaire = place.get_statistiques("proprietaire_de_la_place").get_statistiques("voiture")
+                voiture_proprietaire = place.get_statistiques("proprietaire_de_la_place").get_statistiques("voiture").get_statistiques("immatriculation")
                 voitures.append(voiture_proprietaire)
 
         return voitures
@@ -196,13 +196,18 @@ class Parking:
         return False
 
     def garer_voiture(self, voiture: dict, place: int | Voiture):
-        """Mutateur garant une voiture à une place si elle existe et si elle n'est pas occupée"""
+        """Mutateur garant une voiture à une place si elle existe et si elle n'est pas occupée."""
         if type(place) != Voiture:
             place = self.trouver_place(place)
 
         if place:
             if not place.occupation:
                 if voiture["immatriculation"] not in self.__immatriculations_voitures():
+                    # Vérification si l'immatriculation appartient à un abonné
+                    if voiture["immatriculation"] in self.__abonnes_immatriculation_voitures_parking():
+                        print("La voiture appartient à un abonné. Attribution de la place.")
+                    
+                    # Ajout de la voiture
                     objet_voiture = Voiture(self, place, voiture["immatriculation"], voiture["marque"])
                     self.voitures.append(objet_voiture)
                     place.attribuer_voiture(objet_voiture)
@@ -212,9 +217,9 @@ class Parking:
                 else:
                     print("La voiture ne peut pas avoir la même immatriculation qu'une autre voiture.")
             else:
-                print("La place est déja occupée")
+                print("La place est déjà occupée.")
         else:
-            print("La place n'existe pas dans ce parking")
+            print("La place n'existe pas dans ce parking.")
 
     def retirer_voiture(self, voiture: str | Voiture):
         """Mutateur retirant une voiture garée dans un parking"""
@@ -230,14 +235,51 @@ class Parking:
                 self.places_libres += 1
                 self.places_occupees -= 1
 
-repartition = {0:23, -1:56, 5:26}
-voitures = [{"immatriculation": "AA-123-AA", "marque": "Volvo", "nom_proprietaire": "Michel", "place": -101}]
-abonne = [{"nom_abonne": "Jean", "immatriculation_voiture": "", "place": 105, "marque": "Volvo"}]
+if __name__ == "__main__":
+    # Création d'un parking fictif pour les tests
+    repartition = {0: 10, 1: 15}
+    voitures = [
+        {"immatriculation": "AA-123-AA", "marque": "Volvo", "nom_proprietaire": "Michel", "place": 1},
+        {"immatriculation": "BB-456-BB", "marque": "Toyota", "nom_proprietaire": "Jean", "place": 2}
+    ]
+    abonnes = [
+        {"nom": "Alice", "immatriculation": "CC-789-CC", "place": 3, "marque": "Tesla"}
+    ]
 
-test = Parking("Michel", repartition, voitures)
-print(test)
-print(test.get_statistiques("etages")[0].get_statistiques("places")[1].get_statistiques())
-print(test.get_statistiques("etages")[0].get_statistiques("places")[2].get_statistiques())
+    parking_test = Parking("Parking Test", repartition, voitures, abonnes)
 
-test.garer_voiture({"immatriculation": "AA-123-BA", "marque": "Volvo", "nom_proprietaire": "Michel", "place": -101}, -102)
-print(test.get_statistiques("etages")[0].get_statistiques("places")[2].get_statistiques("voiture_occupant"))
+    # Assert pour __init__
+    assert parking_test.nom == "Parking Test", "Le nom du parking devrait être 'Parking Test'."
+    assert len(parking_test.etages) == 2, "Le parking devrait contenir 2 étages."
+    assert parking_test.place_totale == 25, "Le parking devrait avoir un total de 25 places."
+
+    # Assert pour __str__
+    assert str(parking_test) == "Parking Test", "La représentation du parking devrait être 'Parking Test'."
+
+    # Assert pour .get_statistiques()
+    stats = parking_test.get_statistiques()
+    assert stats["nom"] == "Parking Test", "La statistique 'nom' devrait être 'Parking Test'."
+    assert len(stats["etages"]) == 2, "La statistique 'etages' devrait contenir 2 étages."
+    assert stats["place_totale"] == 25, "La statistique 'place_totale' devrait être 25."
+
+    # Test d'une statistique spécifique
+    assert parking_test.get_statistiques("nom") == "Parking Test", "La méthode devrait retourner 'Parking Test' pour la statistique 'nom'."
+    assert len(parking_test.get_statistiques("etages")) == 2, "La méthode devrait retourner 2 étages pour la statistique 'etages'."
+
+    # Assert pour trouver_place()
+    place = parking_test.trouver_place(1)
+    assert place is not False, "La place 1 devrait exister."
+
+    # Assert pour trouver_voiture()
+    voiture = parking_test.trouver_voiture("AA-123-AA")
+    assert voiture is not False, "La voiture avec l'immatriculation 'AA-123-AA' devrait exister."
+
+    # Assert pour garer_voiture()
+    parking_test.garer_voiture({"immatriculation": "DD-000-DD", "marque": "Ford", "nom_proprietaire": "Paul", "place": 4}, 4)
+    assert parking_test.trouver_voiture("DD-000-DD") is not False, "La voiture 'DD-000-DD' devrait être garée."
+
+    # Assert pour retirer_voiture()
+    parking_test.retirer_voiture("AA-123-AA")
+    assert parking_test.trouver_voiture("AA-123-AA") is False, "La voiture 'AA-123-AA' devrait être retirée."
+
+    print("Tous les tests pour la classe Parking sont passés avec succès.")

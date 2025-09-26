@@ -51,3 +51,54 @@ class Place:
             self.proprietaire_de_la_place = proprietaire
         else:
             print("La place est déjà réservée")
+
+if __name__ == "__main__":
+    # Création d'un parking et d'un étage fictifs pour les tests
+    class ParkingFictif:
+        pass
+
+    class EtageFictif:
+        pass
+
+    parking_test = ParkingFictif()
+    etage_test = EtageFictif()
+
+    # Création d'une place pour les tests
+    place_test = Place(parking_test, etage_test, numero=101)
+
+    # Assert pour __init__
+    assert place_test.numero == 101, "Le numéro de la place devrait être 101."
+    assert place_test.occupation is False, "La place devrait être initialement libre."
+    assert place_test.voiture_occupant is None, "Aucune voiture ne devrait occuper la place initialement."
+
+    # Assert pour __str__
+    assert str(place_test) == "101", "La représentation de la place devrait être '101'."
+
+    # Assert pour .get_statistiques()
+    stats = place_test.get_statistiques()
+    assert stats["numero"] == 101, "La statistique 'numero' devrait être 101."
+    assert stats["occupation"] is False, "La statistique 'occupation' devrait indiquer que la place est libre."
+    assert stats["voiture_occupant"] is None, "La statistique 'voiture_occupant' devrait être None."
+
+    # Test d'une statistique spécifique
+    assert place_test.get_statistiques("numero") == 101, "La méthode devrait retourner 101 pour la statistique 'numero'."
+    assert place_test.get_statistiques("occupation") is False, "La méthode devrait indiquer que la place est libre."
+
+    # Assert pour attribuer_voiture()
+    class VoitureFictive:
+        pass
+
+    voiture_test = VoitureFictive()
+    place_test.attribuer_voiture(voiture_test)
+    assert place_test.occupation is True, "La place devrait être occupée après l'attribution d'une voiture."
+    assert place_test.voiture_occupant == voiture_test, "La voiture attribuée devrait occuper la place."
+
+    # Assert pour attribuer_proprietaire()
+    class ProprietaireFictif:
+        pass
+
+    proprietaire_test = ProprietaireFictif()
+    place_test.attribuer_proprietaire(proprietaire_test)
+    assert place_test.proprietaire_de_la_place == proprietaire_test, "Le propriétaire attribué devrait être enregistré."
+
+    print("Tous les tests pour la classe Place sont passés avec succès.")

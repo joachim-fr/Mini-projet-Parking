@@ -41,3 +41,32 @@ class Etage:
         if statistique is not None and statistique in stats:
             return stats[statistique]
         return stats
+
+if __name__ == "__main__":
+    # Création d'un parking fictif pour les tests
+    class ParkingFictif:
+        pass
+
+    parking_test = ParkingFictif()
+
+    # Création d'un étage pour les tests
+    etage_test = Etage(parking_test, numero_etage=1, nombre_place=5)
+
+    # Assert pour __init__
+    assert etage_test.numero == 1, "Le numéro de l'étage devrait être 1."
+    assert len(etage_test.places) == 5, "L'étage devrait contenir 5 places."
+
+    # Assert pour __str__
+    assert str(etage_test) == "1", "La représentation de l'étage devrait être '1'."
+
+    # Assert pour .get_statistiques()
+    stats = etage_test.get_statistiques()
+    assert stats["numero"] == 1, "La statistique 'numero' devrait être 1."
+    assert stats["parking"] == parking_test, "La statistique 'parking' devrait correspondre au parking de test."
+    assert len(stats["places"]) == 5, "La statistique 'places' devrait contenir 5 places."
+
+    # Test d'une statistique spécifique
+    assert etage_test.get_statistiques("numero") == 1, "La méthode devrait retourner 1 pour la statistique 'numero'."
+    assert etage_test.get_statistiques("places") == etage_test.places, "La méthode devrait retourner les places pour la statistique 'places'."
+
+    print("Tous les tests pour la classe Etage sont passés avec succès.")
