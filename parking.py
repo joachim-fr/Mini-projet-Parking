@@ -9,8 +9,7 @@ class Parking:
     __init__:
         - nom : nom du parking
         - repartition_place : dictionnaire indiquant comment se fait la répartition des places dans les étages (dictionnaire sous la forme {numero_de_l_etage : numero_de_la_place})
-        - voitures : liste indiquant les places non réservées déjà prises
-        - abonnes : liste indiquant les places déjà prises par des abonnés
+        - abonnes : dictionnaire indiquant les places déjà prisent par des abonnés
     """
 
     def __init__(self, nom: str, repartition_place: dict, voitures: list=[], abonnes: list=[]) -> None:
@@ -125,20 +124,23 @@ class Parking:
         for abonne in abonnes:
             place = self.trouver_place(abonne["place"])
             if place:
-                if abonne["immatriculation"] not in self.__abonnes_immatriculation_voitures_parking():
-                    objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
-                    if objet_voiture.immatriculation == None:
-                        print("La plaque d'immatriculation d'un abonne doit être valide")
-                        return
-                    abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
-                    objet_voiture.ajouter_proprietaire(abonne_objet)
-                    place.attribuer_proprietaire(abonne_objet)
-                    self.places_reservees.append(place) 
-                    self.places_libres -= 1 
+                if place.get_statistiques("proprietaire_de_la_place") == None:
+                    if abonne["immatriculation"] not in self.__abonnes_immatriculation_voitures_parking():
+                        objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
+                        if objet_voiture.immatriculation == None:
+                            print("La plaque d'immatriculation d'un abonne doit être valide")
+                            return
+                        abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
+                        objet_voiture.ajouter_proprietaire(abonne_objet)
+                        place.attribuer_proprietaire(abonne_objet)
+                        self.places_reservees.append(place) 
+                        self.places_libres -= 1 
+                    else:
+                        print("La voiture est déjà abonnée.")
                 else:
-                    print("La voiture est déjà abonnée.")
+                    print("La place est déjà réservée.")
             else:
-                print("La place n'existe pas")        
+                print("La place n'existe pas.")        
 
     def __abonnes_immatriculation_voitures_parking(self) -> list:
         """Assesseur renvoyant la liste de l'entièreté des voitures d'abonnés"""
