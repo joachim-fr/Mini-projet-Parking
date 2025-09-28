@@ -6,10 +6,27 @@ class Parking:
     """
     Parking
 
-    __init__:
+    Attributs :
         - nom : nom du parking
-        - repartition_place : dictionnaire indiquant comment se fait la répartition des places dans les étages (dictionnaire sous la forme {numero_de_l_etage : numero_de_la_place})
-        - abonnes : dictionnaire indiquant les places déjà prisent par des abonnés
+        - etages : liste des étages du parking
+        - places : liste de toutes les places du parking
+        - voitures : liste des voitures garées dans le parking
+        - place_totale : nombre total de places dans le parking
+        - places_libres : nombre de places libres dans le parking
+        - places_occupees : nombre de places occupées dans le parking
+        - places_reservees : liste des places réservées aux abonnés
+        - voitures_abonnes : liste des voitures des abonnés
+
+    Méthodes :
+        - __init__ : initialise un parking avec un nom, une répartition des places, des voitures et des abonnés
+        - __str__ : retourne le nom du parking
+        - get_statistiques : retourne les statistiques du parking
+        - trouver_place : trouve une place dans le parking par son numéro
+        - trouver_voiture : trouve une voiture dans le parking par son immatriculation
+        - garer_voiture : gare une voiture à une place donnée
+        - retirer_voiture : retire une voiture du parking
+        - ajouter_abonne : ajoute un abonné au parking
+        - supprimer_abonne : supprime un abonné du parking
     """
 
     def __init__(self, nom: str, repartition_place: dict, voitures: list=[], abonnes: list=[]) -> None:

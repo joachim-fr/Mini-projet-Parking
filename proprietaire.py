@@ -2,9 +2,13 @@ class Proprietaire:
     """
     Propriétaire d'une voiture dans un parking
 
-    __init__ :
-        - nom : nom du propriétaire
-        - voiture : voiture possédée
+    Attributs :
+        - nom : le nom du propriétaire
+        - voiture : la voiture possédée par le propriétaire
+
+    Méthodes :
+        - __init__ : initialise un propriétaire avec un nom et une voiture
+        - get_statistiques : retourne les statistiques du propriétaire
     """
 
     def __init__(self, nom, voiture) -> None:
@@ -26,11 +30,16 @@ class Proprietaire:
 
 class Abonne(Proprietaire):
     """
-    Abonné possédant une place
+    Abonné possédant une place réservée dans un parking
 
-    __init__ :
-        Les mêmes attributs pour un propriétaire sont requis
-        - place : place que l'abonné détient
+    Attributs :
+        - nom : le nom de l'abonné (hérité de Proprietaire)
+        - voiture : la voiture possédée par l'abonné (hérité de Proprietaire)
+        - place : la place réservée par l'abonné
+
+    Méthodes :
+        - __init__ : initialise un abonné avec un nom, une voiture et une place
+        - get_statistiques : retourne les statistiques de l'abonné
     """
 
     def __init__(self, nom, voiture, place) -> None:

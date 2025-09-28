@@ -1,11 +1,21 @@
 class Place:
     """
-    Place dun parking
+    Place d'un parking
 
-    __init__ :
-        - parking : parking dans lequel est la place
-        - etage : étage ou ce trouve la place
-        - numero : numero de la place (sous la forme : "numero de l'étage" + "numéro de la place dans l'étage")
+    Attributs :
+        - parking : le parking auquel appartient la place
+        - etage : l'étage auquel appartient la place
+        - numero : le numéro unique de la place
+        - occupation : indique si la place est occupée (True) ou libre (False)
+        - voiture_occupant : la voiture occupant la place (None si la place est libre)
+        - proprietaire_de_la_place : le propriétaire de la place (None si la place n'est pas réservée)
+
+    Méthodes :
+        - __init__ : initialise une place avec un parking, un étage et un numéro
+        - __str__ : retourne le numéro de la place sous forme de chaîne
+        - get_statistiques : retourne les statistiques de la place
+        - attribuer_voiture : attribue une voiture à la place
+        - attribuer_proprietaire : attribue un propriétaire à la place
     """
 
     def __init__(self, parking, etage, numero: int) -> None:

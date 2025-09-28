@@ -3,11 +3,16 @@ from place import *
 class Etage:
     """
     Etage d'un parking
-    
-    __init__ :
-        - parking : le parking dans lequel est l'étage
-        - numero_etage : le numéro de l'étage
-        - nombre_place : le nombre de place dans l'étage
+
+    Attributs :
+        - parking : le parking auquel appartient l'étage
+        - numero : le numéro de l'étage
+        - places : la liste des places disponibles dans l'étage
+
+    Méthodes :
+        - __init__ : initialise un étage avec un parking, un numéro d'étage et un nombre de places
+        - __str__ : retourne le numéro de l'étage sous forme de chaîne
+        - get_statistiques : retourne les statistiques de l'étage
     """
 
     def __init__(self, parking, numero_etage: int, nombre_place: int) -> None:
