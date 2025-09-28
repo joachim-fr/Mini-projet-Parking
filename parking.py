@@ -136,7 +136,6 @@ class Parking:
                         objet_voiture.ajouter_proprietaire(abonne_objet)
                         place.attribuer_proprietaire(abonne_objet)
                         self.places_reservees.append(place) 
-                        self.places_libres -= 1 
                     else:
                         print("La voiture est déjà abonnée.")
                 else:
@@ -213,6 +212,33 @@ class Parking:
                     if objet_voiture.get_statistiques("immatriculation") == None:
                         print("La plaque d'immatriculation d'un abonne doit être valide")
                         return
+                    abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
+                    objet_voiture.ajouter_proprietaire(abonne_objet)
+                    place.attribuer_proprietaire(abonne_objet)
+                    self.places_reservees.append(place) 
+                else:
+                    print("La voiture est déjà abonnée.")
+            else:
+                print("La place est déjà réservée.")
+
+    def supprimer_abonne(self, abonne: str | Abonne) -> None:
+        """Mutateur supprimant un abonné possedant une place dans un parking."""
+        if type(abonne) != Abonne:
+            for place in self.places_reservees:
+                if place.get_statistiques("proprietaire_de_la_place").get_statistiques("nom") == abonne:
+                    abonne = place.get_statistiques("proprietaire_de_la_place")
+                    break
+
+        if abonne:
+            if abonne.get_statistiques("voiture").get_statistiques("immatriculation") in self.voitures_abonnes:
+                place = abonne.get_statistiques("place_reservee")
+                place.attribuer_proprietaire(None)
+                self.places_reservees.remove(place)
+                self.voitures_abonnes.remove(abonne.get_statistiques("voiture").get_statistiques("immatriculation"))
+            else:
+                print("L'abonné n'existe pas dans ce parking.")
+        else:
+            print("L'abonné n'existe pas dans ce parking.")
 
     def garer_voiture(self, voiture: dict, place: int | Voiture):
         """Mutateur garant une voiture à une place si elle existe et si elle n'est pas occupée."""
@@ -289,11 +315,26 @@ if __name__ == "__main__":
     assert voiture is not False, "La voiture avec l'immatriculation 'AA-123-AA' devrait exister."
 
     # Assert pour garer_voiture()
-    parking_test.garer_voiture({"immatriculation": "DD-000-DD", "marque": "Ford", "nom_proprietaire": "Paul", "place": 4}, 4)
+    parking_test.garer_voiture({"immatriculation": "DD-000-DD", "marque": "Ford", "nom_proprietaire": "Paul"}, 4)
     assert parking_test.trouver_voiture("DD-000-DD") is not False, "La voiture 'DD-000-DD' devrait être garée."
 
     # Assert pour retirer_voiture()
     parking_test.retirer_voiture("AA-123-AA")
     assert parking_test.trouver_voiture("AA-123-AA") is False, "La voiture 'AA-123-AA' devrait être retirée."
+
+    # Tests supplémentaires
+
+    # Vérification des places libres et occupées
+
+    assert parking_test.places_libres == 23, "Il devrait rester 23 places libres."  # Mise à jour de l'assertion
+    assert parking_test.places_occupees == 2, "Il devrait y avoir 2 places occupées."
+
+    # Vérification des abonnés
+    assert len(parking_test.places_reservees) == 1, "Il devrait y avoir 1 place réservée pour les abonnés."
+    assert parking_test.get_statistiques("voitures_abonnes")[0] == "CC-789-CC", "La voiture de l'abonné devrait être enregistrée."
+
+    # Vérification des immatriculations
+    immatriculations = parking_test.get_statistiques("places")
+    assert len(immatriculations) == 25, "Le parking devrait contenir 25 places."
 
     print("Tous les tests pour la classe Parking sont passés avec succès.")
