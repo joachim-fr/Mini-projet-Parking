@@ -45,6 +45,8 @@ class Parking:
         self.__ajouter_voitures__init(voitures)
         self.__ajouter_abonnes__init(abonnes)
 
+        # --- Ajout des immatriculations dans l'attribut de la classe
+
         self.voitures_abonnes = self.__abonnes_immatriculation_voitures_parking()
 
     def __str__(self) -> str:
@@ -127,7 +129,7 @@ class Parking:
                 if place.get_statistiques("proprietaire_de_la_place") == None:
                     if abonne["immatriculation"] not in self.__abonnes_immatriculation_voitures_parking():
                         objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
-                        if objet_voiture.immatriculation == None:
+                        if objet_voiture.get_statistiques("immatriculation") == None:
                             print("La plaque d'immatriculation d'un abonne doit être valide")
                             return
                         abonne_objet = Abonne(abonne["nom"], objet_voiture, place)
@@ -200,6 +202,17 @@ class Parking:
             if immatriculation == voiture.get_statistiques("immatriculation"):
                 return voiture
         return False
+
+    def ajouter_abonne(self, abonne: dict) -> None:
+        """Mutateur ajoutant un abonne possedant une place à un parking."""
+        place = self.trouver_place(abonne["place"])
+        if place:
+            if place.get_statistiques("proprietaire_de_la_place") == None:
+                if abonne["immatriculation"] not in self.voitures_abonnes:
+                    objet_voiture = Voiture(self, None, abonne["immatriculation"], abonne["marque"])
+                    if objet_voiture.get_statistiques("immatriculation") == None:
+                        print("La plaque d'immatriculation d'un abonne doit être valide")
+                        return
 
     def garer_voiture(self, voiture: dict, place: int | Voiture):
         """Mutateur garant une voiture à une place si elle existe et si elle n'est pas occupée."""
