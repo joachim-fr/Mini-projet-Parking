@@ -113,7 +113,7 @@ class Parking:
                 liste_etages_corrigee.insert(0, etage_test)
                 liste_etages.pop(liste_etages.index(etage_test))
             else:
-                liste_etages_corrigees.insert(0, min(liste_etages_corrigee) - 1)
+                liste_etages_corrigee.insert(0, min(liste_etages_corrigee) - 1)
                 liste_etages.pop(liste_etages.index(etage_test))        
 
         for i in range(len(liste_etages_corrigee)):
