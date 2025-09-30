@@ -113,7 +113,7 @@ class Parking:
                 liste_etages_corrigee.insert(0, etage_test)
                 liste_etages.pop(liste_etages.index(etage_test))
             else:
-                liste_etages_corrigee.insert(0, min(liste_etages_corrigee) - 1)
+                liste_etages_corrigees.insert(0, min(liste_etages_corrigee) - 1)
                 liste_etages.pop(liste_etages.index(etage_test))        
 
         for i in range(len(liste_etages_corrigee)):
@@ -292,6 +292,34 @@ class Parking:
                 self.places_libres += 1
                 self.places_occupees -= 1
 
+    def afficher_etage_ascii(self, numero_etage: int):
+        """
+        Affiche un étage en ASCII dans le terminal avec des séparateurs :
+        - 'O' pour les places occupées
+        - 'R' pour les places réservées
+        - 'L' pour les places libres
+        Chaque ligne contient 50 places.
+        """
+        etage = next((e for e in self.etages if e.numero == numero_etage), None)
+        if not etage:
+            print(f"L'étage {numero_etage} n'existe pas.")
+            return
+
+        affichage = []
+        for place in etage.get_statistiques("places"):
+            if place.get_statistiques("occupation"):
+                affichage.append("O") 
+            elif place.get_statistiques("proprietaire_de_la_place") is not None:
+                affichage.append("R")
+            else:
+                affichage.append("L")
+
+        print(f"Étage {numero_etage} :")
+        for i in range(0, len(affichage), 50):
+            ligne = affichage[i:i+50]
+            print("|" + "|".join(ligne) + "|")
+
+
 if __name__ == "__main__":
     # Création d'un parking fictif pour les tests
     repartition = {0: 10, 1: 15}
@@ -355,3 +383,6 @@ if __name__ == "__main__":
     assert len(immatriculations) == 25, "Le parking devrait contenir 25 places."
 
     print("Tous les tests pour la classe Parking sont passés avec succès.")
+    # Test de la méthode afficher_etage_ascii
+    print("\nAffichage ASCII de l'étage 0 :")
+    parking_test.afficher_etage_ascii(0)
