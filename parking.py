@@ -319,6 +319,47 @@ class Parking:
             ligne = affichage[i:i+50]
             print("|" + "|".join(ligne) + "|")
 
+    def  info_voiture(self, immatriculation: str) -> dict | None:
+        """Retourne les informations d'une voiture garée dans le parking dans un dictionnaire"""
+        voiture = self.trouver_voiture(immatriculation)
+        if voiture:
+            return voiture.get_statistiques()
+        else:
+            print("La voiture n'existe pas dans ce parking.")
+            return None
+        
+    def statut_occupation_place(self, numero_place: int) -> str | None:
+        """Retourne le statut d'occupation d'une place dans le parking, si elle est occupée renvoit la voiture qui l'occupe, si elle est réservée renvoit l'abonné qui la possède, sinon renvoit 'Libre'"""
+        place = self.trouver_place(numero_place)
+        if place:
+            if place.get_statistiques("occupation"):
+                return f"Occupée par la voiture {place.get_statistiques('voiture_occupant').get_statistiques('immatriculation')}"
+            elif place.get_statistiques("proprietaire_de_la_place") is not None:
+                return f"Réservée par l'abonné {place.get_statistiques('proprietaire_de_la_place').get_statistiques('nom')}"
+            else:
+                return "Libre"
+        else:
+            print("La place n'existe pas dans ce parking.")
+            return None
+
+    def fraudes_place_abonne(self) -> list:
+        """Retourne une liste des places d"'abonnés qui sont occupées par des voitures non abonnées"""
+        fraudes = []
+        for place in self.places_reservees:
+            if place.get_statistiques("occupation"):
+                voiture_occupant = place.get_statistiques("voiture_occupant")
+                if voiture_occupant.get_statistiques("immatriculation") not in self.voitures_abonnes:
+                    fraudes.append(place)
+        return fraudes
+    
+    def places_disponibles(self) -> list:
+        """Retourne une liste des places libres non dans le parking"""
+        places_libres = []
+        for place in self.places:
+            if not place.get_statistiques("occupation") and place.get_statistiques("proprietaire_de_la_place") is None:
+                places_libres.append(place)
+        return places_libres
+
 
 if __name__ == "__main__":
     # Création d'un parking fictif pour les tests
@@ -383,6 +424,3 @@ if __name__ == "__main__":
     assert len(immatriculations) == 25, "Le parking devrait contenir 25 places."
 
     print("Tous les tests pour la classe Parking sont passés avec succès.")
-    # Test de la méthode afficher_etage_ascii
-    print("\nAffichage ASCII de l'étage 0 :")
-    parking_test.afficher_etage_ascii(0)
