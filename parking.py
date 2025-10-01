@@ -292,7 +292,7 @@ class Parking:
                 self.places_libres += 1
                 self.places_occupees -= 1
 
-    def afficher_etage_ascii(self, numero_etage: int):
+    def afficher_etage(self, numero_etage: int):
         """
         Affiche un étage en ASCII dans le terminal avec des séparateurs :
         - 'O' pour les places occupées
