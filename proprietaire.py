@@ -11,7 +11,7 @@ class Proprietaire:
         - get_statistiques : retourne les statistiques du propriétaire
     """
 
-    def __init__(self, nom, voiture) -> None:
+    def __init__(self, voiture, nom="") -> None:
         
         self.nom = nom
         self.voiture = voiture

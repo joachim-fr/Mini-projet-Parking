@@ -237,6 +237,8 @@ class Parking:
                     print("La voiture est déjà abonnée.")
             else:
                 print("La place est déjà réservée.")
+        else:
+            print("La place n'existe pas.")
 
     def supprimer_abonne(self, abonne: str | Abonne) -> None:
         """Mutateur supprimant un abonné possedant une place dans un parking."""
@@ -257,9 +259,9 @@ class Parking:
         else:
             print("L'abonné n'existe pas dans ce parking.")
 
-    def garer_voiture(self, voiture: dict, place: int | Voiture):
+    def garer_voiture(self, voiture: dict, place: int | Place):
         """Mutateur garant une voiture à une place si elle existe et si elle n'est pas occupée."""
-        if type(place) != Voiture:
+        if type(place) != Place:
             place = self.trouver_place(place)
 
         if place:
@@ -410,10 +412,7 @@ if __name__ == "__main__":
     parking_test.retirer_voiture("AA-123-AA")
     assert parking_test.trouver_voiture("AA-123-AA") is False, "La voiture 'AA-123-AA' devrait être retirée."
 
-    # Tests supplémentaires
-
     # Vérification des places libres et occupées
-
     assert parking_test.places_libres == 23, "Il devrait rester 23 places libres."  # Mise à jour de l'assertion
     assert parking_test.places_occupees == 2, "Il devrait y avoir 2 places occupées."
 
@@ -424,5 +423,7 @@ if __name__ == "__main__":
     # Vérification des immatriculations
     immatriculations = parking_test.get_statistiques("places")
     assert len(immatriculations) == 25, "Le parking devrait contenir 25 places."
+
+    parking_test.afficher_etage(0)
 
     print("Tous les tests pour la classe Parking sont passés avec succès.")
