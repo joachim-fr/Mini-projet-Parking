@@ -292,6 +292,8 @@ class Parking:
                 self.places_libres += 1
                 self.places_occupees -= 1
 
+    # Méthodes du sujet
+
     def afficher_etage(self, numero_etage: int):
         """
         Affiche un étage en ASCII dans le terminal avec des séparateurs :
