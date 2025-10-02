@@ -296,7 +296,7 @@ class Parking:
 
     def afficher_etage(self, numero_etage: int):
         """
-        Affiche un étage en ASCII dans le terminal avec des séparateurs :
+        Affiche un étage dans le terminal avec des séparateurs :
         - 'O' pour les places occupées
         - 'R' pour les places réservées
         - 'L' pour les places libres
